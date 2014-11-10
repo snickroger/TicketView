@@ -7,7 +7,7 @@
 @foreach (var ticket in Model.Tickets)
 {
     <div>
-        <h2>@ticket.Title</h2>
+        <h2><a href="https://www.assembla.com/spaces/ndproject/tickets/@ticket.Number" target="_blank">@ticket.Title</a></h2>
         <h4>Created @ticket.Created.ToShortDateString()</h4>
         <p>#@ticket.Number [@ticket.Status]</p>
     </div>
