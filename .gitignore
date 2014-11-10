@@ -30,3 +30,4 @@ _ReSharper*/
 
 #added by nrogers
 packages/*
+TicketView/Secrets.[D|r]*
