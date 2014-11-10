@@ -82,5 +82,57 @@ namespace TicketView.Controllers
         {
             return (from JObject jo in milestonesResponse select new Milestone(jo)).ToList();
         }
+
+        [HttpGet]
+        public ActionResult Tickets(string id)
+        {
+            List<Ticket> tickets;
+            try
+            {
+                JArray ticketsResponse = GetTickets("7260603");
+                tickets = ParseTickets(ticketsResponse);
+            }
+            catch (UnauthorizedAccessException)
+            {
+                return RedirectToAction("Login", "Home");
+            }
+            return Json(tickets, JsonRequestBehavior.AllowGet);
+        }
+
+        private JArray GetTickets(string milestoneId)
+        {
+            int page = 1;
+            JArray tickets = new JArray();
+            while (page <= 6)
+            {
+                string url = String.Format("https://api.assembla.com/v1/spaces/{0}/tickets/milestone/{1}.json?per_page=25&page={2}&ticket_status=all", Secrets.SpaceId, milestoneId, page++);
+                HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
+                request.Headers.Add(SharedMethods.GetBearerAuthorizationHeader(ReauthorizeToken(Request.Cookies["AuthToken"])));
+                request.Method = "GET";
+
+                HttpWebResponse response = (HttpWebResponse)request.GetResponse();
+                string result;
+                using (StreamReader sr = new StreamReader(response.GetResponseStream()))
+                {
+                    result = sr.ReadToEnd();
+                }
+
+                if (String.IsNullOrWhiteSpace(result))
+                    break;
+
+                JArray t = JArray.Parse(result);
+                foreach (JObject jo in t.Where(a => a["assigned_to_id"].Value<string>() == Secrets.UserId))
+                {
+                    tickets.Add(jo);
+                }
+            }
+            return tickets;
+        }
+
+        private static List<Ticket> ParseTickets(JArray ticketsResponse)
+        {
+            return (from JObject jo in ticketsResponse select new Ticket(jo)).ToList();
+        }
+
     }
 }

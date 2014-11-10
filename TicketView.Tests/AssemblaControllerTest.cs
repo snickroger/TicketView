@@ -84,16 +84,9 @@ public TestContext TestContext
             Assert.AreEqual(expected, actual);
         }
 
-        /// <summary>
-        ///A test for ParseMilestones
-        ///</summary>
-        // TODO: Ensure that the UrlToTest attribute specifies a URL to an ASP.NET page (for example,
-        // http://.../Default.aspx). This is necessary for the unit test to be executed on the web server,
-        // whether you are testing a page, web service, or a WCF service.
         [TestMethod()]
         [HostType("ASP.NET")]
-        [AspNetDevelopmentServerHost("C:\\Users\\nrogers\\Documents\\Visual Studio 2010\\Projects\\TicketView\\TicketView", "/")]
-        [UrlToTest("http://localhost:56249/")]
+        [UrlToTest("http://tickets.nick/")]
         [DeploymentItem("TicketView.dll")]
         public void ParseMilestonesTest()
         {
@@ -102,5 +95,18 @@ public TestContext TestContext
             List<Milestone> actual = AssemblaController_Accessor.ParseMilestones(milestonesResponse);
             Assert.IsTrue(actual.Count > 0);
         }
+
+        [TestMethod()]
+        [HostType("ASP.NET")]
+        [UrlToTest("http://tickets.nick/")]
+        [DeploymentItem("TicketView.dll")]
+        public void ParseTicketsTest()
+        {
+            string sampleResponse = System.IO.File.ReadAllText(@"..\..\SampleResponses\GetTickets.txt");
+            JArray ticketsResponse = JArray.Parse(sampleResponse);
+            List<Ticket> actual = AssemblaController_Accessor.ParseTickets(ticketsResponse);
+            Assert.IsTrue(actual.Count > 0);
+        }
+
     }
 }

@@ -113,5 +113,14 @@ namespace TicketView {
                 return ResourceManager.GetString("TokenUrl", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to aFdgQMibWr4k4WeJe5cbLA.
+        /// </summary>
+        internal static string UserId {
+            get {
+                return ResourceManager.GetString("UserId", resourceCulture);
+            }
+        }
     }
 }

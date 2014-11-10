@@ -111,6 +111,7 @@
   <ItemGroup>
     <Content Include="App.config" />
     <Content Include="SampleResponses\GetMilestones.txt" />
+    <Content Include="SampleResponses\GetTickets.txt" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
