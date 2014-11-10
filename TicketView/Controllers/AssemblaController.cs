@@ -10,6 +10,9 @@ namespace TicketView.Controllers
 {
     public class AssemblaController : ApiController
     {
-
+        public void GetMilestones()
+        {
+            // https://api.assembla.com/v1/spaces/ccWk4o9Bqr4jfCacwqjQWU/milestones.xml
+        }
     }
 }
