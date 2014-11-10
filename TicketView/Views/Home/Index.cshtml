@@ -1,4 +1,10 @@
-﻿@{
+﻿@model TicketView.Controllers.HomeController.ViewModel
+@{
     ViewBag.Title = "title";
     Layout = "_Layout.cshtml";
+}
+
+@foreach (var ticket in Model.Tickets)
+{
+    <p>@ticket.Title</p>
 }
