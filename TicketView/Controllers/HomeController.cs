@@ -157,7 +157,7 @@ namespace TicketView.Controllers
 
         private static List<Ticket> ParseTickets(JArray ticketsResponse)
         {
-            return (from JObject jo in ticketsResponse select new Ticket(jo)).ToList();
+            return (from JObject jo in ticketsResponse select new Ticket(jo)).OrderByDescending(a=>a.Number).ToList();
         }
 
         public class ViewModel
