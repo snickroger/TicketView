@@ -1,17 +1,38 @@
 ﻿@{
     Layout = null;
 }
-
 <!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <!-- <link rel="icon" href="../../favicon.ico"> TODO -->
 
-<html>
-<head>
-    <meta name="viewport" content="width=device-width" />
     <title>Nick's Ticket View</title>
-</head>
-<body>
-    <div>
-        @RenderBody()
-    </div>
-</body>
+
+    <link href="~/Content/bootswatch/slate/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/Content/site.css" rel="stylesheet" />
+
+  </head>
+
+  <body>
+
+
+          <div class="col-md-2">
+          
+          </div>
+          <div class="col-md-9">
+              @RenderBody()
+          </div>
+          <div class="col-md-1">
+          
+          </div>
+
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script src="~/Scripts/bootstrap.min.js"></script>
+  </body>
 </html>

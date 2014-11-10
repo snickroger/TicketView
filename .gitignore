@@ -31,3 +31,5 @@ _ReSharper*/
 #added by nrogers
 packages/*
 TicketView/Secrets.[D|r]*
+TicketView/Content
+TicketView/Scripts
