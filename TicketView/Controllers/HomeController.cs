@@ -29,13 +29,10 @@ namespace TicketView.Controllers
                 return Redirect(authUrl);
             }
 
-            string auth = String.Format("{0}:{1}", Secrets.ApplicationId, Secrets.ApplicationSecret);
-            auth = String.Format("Basic {0}", Convert.ToBase64String(System.Text.Encoding.Default.GetBytes(auth)));
-
             string tokenUrl = String.Format(Secrets.TokenUrl, code);
 
             HttpWebRequest request = (HttpWebRequest) WebRequest.Create(tokenUrl);
-            request.Headers.Add("Authorization", auth);
+            request.Headers.Add(SharedMethods.GetBasicAuthorizationHeader());
             request.UserAgent = "Nick's Ticket View/1.0";
             request.ContentLength = 0;
             request.Method = "POST";
@@ -63,7 +60,8 @@ namespace TicketView.Controllers
                 return Content(token.ToString());
             }
 
-            Response.Cookies.Add(new HttpCookie("AuthToken", token["access_token"].Value<string>()));
+            Response.Cookies.Add(new HttpCookie("AuthToken", token["access_token"].Value<string>()) { Expires = DateTime.Now.AddSeconds(590) });
+            Response.Cookies.Add(new HttpCookie("RefreshToken", token["refresh_token"].Value<string>()) { Expires = DateTime.Now.AddDays(30) } );
 
             return RedirectToAction("Index");
 

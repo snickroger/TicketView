@@ -103,14 +103,18 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AssemblaControllerTest.cs" />
     <Compile Include="HomeControllerTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SharedMethodsTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="App.config" />
+    <Content Include="SampleResponses\GetMilestones.txt" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+    <Shadow Include="Test References\TicketView.accessor" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\TicketView\TicketView.csproj">
