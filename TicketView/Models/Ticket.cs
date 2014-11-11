@@ -14,6 +14,7 @@ namespace TicketView.Models
         public string Title { get; private set; }
         public string Status { get; private set; }
         public string Component { get; private set; }
+        private int _priority;
 
         public Ticket(JObject jo)
         {
@@ -23,6 +24,7 @@ namespace TicketView.Models
             Title = jo["summary"].Value<string>();
             Status = jo["status"].Value<string>();
             Component = jo["custom_fields"]["Component"].Value<string>();
+            _priority = jo["priority"].Value<int>();
         }
 
         public string PanelStyle { get
@@ -43,5 +45,22 @@ namespace TicketView.Models
 
         public bool PanelFaded { get { return PanelStyle != "panel-primary"; }}
 
+        public string Priority
+        {
+            get { switch (_priority)
+            {
+                case 1:
+                    return "Highest";
+                case 2:
+                    return "High";
+                case 3:
+                    return "Normal";
+                case 4:
+                    return "Low";
+                case 5:
+                default:
+                    return "Lowest";
+            } }
+        }
     }
 }
