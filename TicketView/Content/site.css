@@ -1,3 +1,7 @@
 ﻿.faded {
     opacity: 0.4;
 }
+
+.ticket ul {
+    list-style-type: none;
+}

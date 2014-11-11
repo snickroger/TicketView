@@ -13,6 +13,7 @@ namespace TicketView.Models
         public DateTime Created { get; private set; }
         public string Title { get; private set; }
         public string Status { get; private set; }
+        public string Component { get; private set; }
 
         public Ticket(JObject jo)
         {
@@ -21,7 +22,26 @@ namespace TicketView.Models
             Created = jo["created_on"].Value<DateTime>();
             Title = jo["summary"].Value<string>();
             Status = jo["status"].Value<string>();
+            Component = jo["custom_fields"]["Component"].Value<string>();
         }
+
+        public string PanelStyle { get
+        {
+            switch (Status)
+            {
+                case "Fixed":
+                case "Certified":
+                    return "panel-success";
+                case "Test":
+                    return "panel-info";
+                case "Invalid":
+                    return "panel-danger";
+                default:
+                    return "panel-primary";
+            }
+        }}
+
+        public bool PanelFaded { get { return PanelStyle != "panel-primary"; }}
 
     }
 }
