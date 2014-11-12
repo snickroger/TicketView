@@ -5,31 +5,25 @@
     Layout = "_Layout.cshtml";
 }
 
-@for (int i = 0; i < Model.Tickets.Count; i += 3)
+@foreach (Ticket ticket in Model.Tickets)
 {
-    <div class="row">
-        @foreach (Ticket ticket in Model.Tickets.Skip(i).Take(3))
-        {
-            var faded = @ticket.PanelFaded ? "faded" : null;
-            <div class="col-md-4">
-                <div class="ticket panel @ticket.PanelStyle @faded">
-                    <div class="panel-heading">
-                        <span class="label label-default pull-right">=</span>
-                        <h3 class="panel-title">
-                            <span class="label label-default">#@ticket.Number</span> 
-                            <a href="https://www.assembla.com/spaces/ndproject/tickets/@ticket.Number" target="_blank">@ticket.Title</a>
-                        </h3>
-                    </div>
-                    <div class="panel-body">
-                        <ul>
-                            <li>Status: <strong>@ticket.Status</strong></li>
-                            <li>Priority: <strong>@ticket.Priority</strong></li>
-                            <li>Component: <strong>@ticket.Component</strong></li>
-                            <li>Created: <strong>@ticket.Created.ToShortDateString()</strong></li>
-                        </ul>
-                    </div>
-                </div>
+    var faded = @ticket.PanelFaded ? "faded" : null;
+    <div class="col-md-4">
+        <div class="ticket panel @ticket.PanelStyle @faded">
+            <div class="panel-heading">
+                <h3 class="panel-title">
+                    <span class="label label-default handle">#@ticket.Number</span> 
+                    <a href="https://www.assembla.com/spaces/ndproject/tickets/@ticket.Number" target="_blank">@ticket.Title</a>
+                </h3>
             </div>
-        }
+            <div class="panel-body">
+                <ul>
+                    <li>Status: <strong>@ticket.Status</strong></li>
+                    <li>Priority: <strong>@ticket.Priority</strong></li>
+                    <li>Component: <strong>@ticket.Component</strong></li>
+                    <li>Created: <strong>@ticket.Created.ToShortDateString()</strong></li>
+                </ul>
+            </div>
+        </div>
     </div>
 }

@@ -1,7 +1,18 @@
-﻿.faded {
+﻿body {
+    box-sizing: content-box !important;
+}
+.faded {
     opacity: 0.4;
+}
+
+.ticket {
+    height: 200px;
 }
 
 .ticket ul {
     list-style-type: none;
+}
+
+.ticket .handle {
+    cursor: move;
 }
