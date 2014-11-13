@@ -1,8 +1,4 @@
-﻿body {
-    box-sizing: content-box !important;
-}
-
-.faded {
+﻿.faded {
     opacity: 0.4;
 }
 
@@ -20,4 +16,8 @@
 
 #SelectedMilestone {
     color: #272B30;
+}
+
+#hide-completed {
+    cursor: pointer;
 }

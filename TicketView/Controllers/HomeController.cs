@@ -29,7 +29,9 @@ namespace TicketView.Controllers
             if (milestones.Cast<JObject>().All(jo => jo["id"].Value<string>() != selectedMilestone))
                 selectedMilestone = milestones.First()["id"].Value<string>();
 
-            ViewModel vm = new ViewModel(ParseMilestones(milestones), selectedMilestone, ParseTickets(GetTickets(selectedMilestone)));
+            bool completedHidden = Request.Cookies["CompletedHidden"] != null && Convert.ToBoolean(Request.Cookies["CompletedHidden"].Value);
+
+            ViewModel vm = new ViewModel(ParseMilestones(milestones), completedHidden, selectedMilestone, ParseTickets(GetTickets(selectedMilestone)));
             return View(vm);
         }
 
@@ -37,6 +39,7 @@ namespace TicketView.Controllers
         public ActionResult Index(ViewModel submitted)
         {
             Response.Cookies.Add(new HttpCookie("SelectedMilestone", submitted.SelectedMilestone) { Expires = DateTime.Now.AddYears(1) });
+            Response.Cookies.Add(new HttpCookie("CompletedHidden", submitted.CompletedHidden.ToString()) { Expires = DateTime.Now.AddYears(1) });
             return RedirectToAction("Index");
         }
 
@@ -183,15 +186,17 @@ namespace TicketView.Controllers
             public IEnumerable<SelectListItem> Milestones { get { return _milestones.Select(a => new SelectListItem() {Text = a.Title, Value = a.Id}); } }
             public List<Ticket> Tickets { get { return _tickets; } }
             public string SelectedMilestone { get; set; }
+            public bool CompletedHidden { get; set; }
 
             public ViewModel()
             {
 
             }
 
-            public ViewModel(List<Milestone> milestones, string selectedMilestone = null, List<Ticket> tickets = null)
+            public ViewModel(List<Milestone> milestones, bool completedHidden, string selectedMilestone = null, List<Ticket> tickets = null)
             {
                 _milestones = milestones;
+                CompletedHidden = completedHidden;
                 if (selectedMilestone != null)
                 {
                     SelectedMilestone = selectedMilestone;

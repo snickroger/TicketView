@@ -1,7 +1,6 @@
 ﻿@using TicketView.Models
 @model TicketView.Controllers.HomeController.ViewModel
 @{
-    ViewBag.Title = "title";
     Layout = "_Layout.cshtml";
 }
 <div class="col-md-2">
@@ -11,12 +10,39 @@
             @Html.LabelFor(a => a.SelectedMilestone, "Milestone:")
             @Html.DropDownListFor(a => a.SelectedMilestone, Model.Milestones, new {@class = "form-control", @onchange="return windowRefresh();"})
         </div>
+        @Html.HiddenFor(a=>a.CompletedHidden)
+        <p id="hide-completed" class="text-center h1" onclick="return changeHideStatus(this);">
+            @if (Model.CompletedHidden)
+            {
+                <i class="fa fa-eye-slash js-show-completed"></i>
+                <style type="text/css">
+                    .faded {
+                        display: none;
+                    }
+                </style>
+            }
+            else
+            {
+                <i class="fa fa-eye js-hide-completed"></i>
+            }
+        </p>
         <script type="text/javascript">
             function windowRefresh() {
                 document.forms[0].submit();
                 return false;
             }
-        </script>
+            
+            function changeHideStatus(a) {
+                var f = $(a).find("i");
+                if (f.hasClass("js-show-completed"))
+                    $("#CompletedHidden").val("false");
+                else
+                    $("#CompletedHidden").val("true");
+
+                windowRefresh();
+            }
+
+        </script>        
     }
 </div>
 <div class="col-md-9">
