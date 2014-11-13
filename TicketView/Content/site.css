@@ -1,6 +1,7 @@
 ﻿body {
     box-sizing: content-box !important;
 }
+
 .faded {
     opacity: 0.4;
 }
@@ -15,4 +16,8 @@
 
 .ticket .handle {
     cursor: move;
+}
+
+#SelectedMilestone {
+    color: #272B30;
 }

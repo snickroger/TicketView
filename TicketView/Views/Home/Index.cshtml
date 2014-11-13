@@ -4,7 +4,22 @@
     ViewBag.Title = "title";
     Layout = "_Layout.cshtml";
 }
-
+<div class="col-md-2">
+    @using (Html.BeginForm())
+    {
+        <div class="form-group">
+            @Html.LabelFor(a => a.SelectedMilestone, "Milestone:")
+            @Html.DropDownListFor(a => a.SelectedMilestone, Model.Milestones, new {@class = "form-control", @onchange="return windowRefresh();"})
+        </div>
+        <script type="text/javascript">
+            function windowRefresh() {
+                document.forms[0].submit();
+                return false;
+            }
+        </script>
+    }
+</div>
+<div class="col-md-9">
 @foreach (Ticket ticket in Model.Tickets)
 {
     var faded = @ticket.PanelFaded ? "faded" : null;
@@ -27,3 +42,7 @@
         </div>
     </div>
 }
+</div>
+<div class="col-md-1">
+          
+</div>

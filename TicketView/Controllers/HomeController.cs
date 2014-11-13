@@ -12,6 +12,7 @@ namespace TicketView.Controllers
 {
     public class HomeController : Controller
     {
+        [HttpGet]
         public ActionResult Index()
         {
             if (Request.Cookies["AuthToken"] == null)
@@ -19,9 +20,24 @@ namespace TicketView.Controllers
                 return RedirectToAction("Login");
             }
 
-            ViewModel vm = new ViewModel(ParseMilestones(GetMilestones()), "7260603", ParseTickets(GetTickets("7260603")));
+            string selectedMilestone = "";
+            JArray milestones = GetMilestones();
+            if (Request.Cookies["SelectedMilestone"] != null)
+                selectedMilestone = Request.Cookies["SelectedMilestone"].Value;
 
+            // if cookie equals invalid or deleted milestone id, just take the first one
+            if (milestones.Cast<JObject>().All(jo => jo["id"].Value<string>() != selectedMilestone))
+                selectedMilestone = milestones.First()["id"].Value<string>();
+
+            ViewModel vm = new ViewModel(ParseMilestones(milestones), selectedMilestone, ParseTickets(GetTickets(selectedMilestone)));
             return View(vm);
+        }
+
+        [HttpPost]
+        public ActionResult Index(ViewModel submitted)
+        {
+            Response.Cookies.Add(new HttpCookie("SelectedMilestone", submitted.SelectedMilestone) { Expires = DateTime.Now.AddYears(1) });
+            return RedirectToAction("Index");
         }
 
         [HttpGet]
@@ -162,21 +178,26 @@ namespace TicketView.Controllers
 
         public class ViewModel
         {
-            public List<Milestone> Milestones { get; private set; }
-            public List<Ticket> Tickets { get; private set; }
-            public string SelectedMilestone { get; private set; }
+            private readonly List<Milestone> _milestones;
+            private readonly List<Ticket> _tickets;
+            public IEnumerable<SelectListItem> Milestones { get { return _milestones.Select(a => new SelectListItem() {Text = a.Title, Value = a.Id}); } }
+            public List<Ticket> Tickets { get { return _tickets; } }
+            public string SelectedMilestone { get; set; }
+
+            public ViewModel()
+            {
+
+            }
 
             public ViewModel(List<Milestone> milestones, string selectedMilestone = null, List<Ticket> tickets = null)
             {
-                Milestones = milestones;
+                _milestones = milestones;
                 if (selectedMilestone != null)
                 {
                     SelectedMilestone = selectedMilestone;
-                    Tickets = tickets;
+                    _tickets = tickets;
                 }
             }
-
         }
-
     }
 }
