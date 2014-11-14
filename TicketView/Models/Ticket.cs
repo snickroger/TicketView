@@ -38,12 +38,14 @@ namespace TicketView.Models
                     return "panel-info";
                 case "Invalid":
                     return "panel-danger";
+                case "Review":
+                    return "panel-warning";
                 default:
                     return "panel-primary";
             }
         }}
 
-        public bool PanelFaded { get { return PanelStyle != "panel-primary"; }}
+        public bool PanelFaded { get { return PanelStyle != "panel-primary" || Status == "Coded"; }}
 
         public string Priority
         {

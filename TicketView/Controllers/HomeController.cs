@@ -201,6 +201,8 @@ namespace TicketView.Controllers
                 {
                     SelectedMilestone = selectedMilestone;
                     _tickets = tickets;
+                    if (completedHidden && _tickets != null)
+                        _tickets = _tickets.Where(a => !a.PanelFaded).ToList();
                 }
             }
         }
