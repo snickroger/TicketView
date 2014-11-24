@@ -48,6 +48,11 @@ namespace TicketView.Controllers
         {
             if (code == null)
             {
+                if (Request.Cookies["RefreshToken"] != null)
+                {
+                    ReauthorizeToken(null);
+                    return RedirectToAction("Index");
+                }
                 string authUrl = String.Format(Secrets.AuthorizationUrl, Secrets.ApplicationId);
                 return Redirect(authUrl);
             }
