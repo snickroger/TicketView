@@ -12,24 +12,25 @@ namespace TicketView.Controllers
 {
     public class HomeController : Controller
     {
+        public ICookie Cookies = new CookieHelper();
         [HttpGet]
         public ActionResult Index()
         {
-            if (Request.Cookies["AuthToken"] == null)
+            if (Cookies.GetCookie(Request, "AuthToken") == null)
             {
                 return RedirectToAction("Login");
             }
 
             string selectedMilestone = "";
             JArray milestones = GetMilestones();
-            if (Request.Cookies["SelectedMilestone"] != null)
-                selectedMilestone = Request.Cookies["SelectedMilestone"].Value;
+            if (Cookies.GetCookie(Request, "SelectedMilestone") != null)
+                selectedMilestone = Cookies.GetCookie(Request, "SelectedMilestone").Value;
 
             // if cookie equals invalid or deleted milestone id, just take the first one
             if (milestones.Cast<JObject>().All(jo => jo["id"].Value<string>() != selectedMilestone))
                 selectedMilestone = milestones.First()["id"].Value<string>();
 
-            bool completedHidden = Request.Cookies["CompletedHidden"] != null && Convert.ToBoolean(Request.Cookies["CompletedHidden"].Value);
+            bool completedHidden = Cookies.GetCookie(Request, "CompletedHidden") != null && Convert.ToBoolean(Cookies.GetCookie(Request, "CompletedHidden").Value);
 
             ViewModel vm = new ViewModel(ParseMilestones(milestones), completedHidden, selectedMilestone, ParseTickets(GetTickets(selectedMilestone)));
             return View(vm);
@@ -38,8 +39,8 @@ namespace TicketView.Controllers
         [HttpPost]
         public ActionResult Index(ViewModel submitted)
         {
-            Response.Cookies.Add(new HttpCookie("SelectedMilestone", submitted.SelectedMilestone) { Expires = DateTime.Now.AddYears(1) });
-            Response.Cookies.Add(new HttpCookie("CompletedHidden", submitted.CompletedHidden.ToString()) { Expires = DateTime.Now.AddYears(1) });
+            Cookies.SetCookie(Response, new HttpCookie("SelectedMilestone", submitted.SelectedMilestone) { Expires = DateTime.Now.AddYears(1) });
+            Cookies.SetCookie(Response, new HttpCookie("CompletedHidden", submitted.CompletedHidden.ToString()) { Expires = DateTime.Now.AddYears(1) });
             return RedirectToAction("Index");
         }
 
@@ -48,7 +49,7 @@ namespace TicketView.Controllers
         {
             if (code == null)
             {
-                if (Request.Cookies["RefreshToken"] != null)
+                if (Cookies.GetCookie(Request, "RefreshToken") != null)
                 {
                     ReauthorizeToken(null);
                     return RedirectToAction("Index");
@@ -88,8 +89,8 @@ namespace TicketView.Controllers
                 return Content(token.ToString());
             }
 
-            Response.Cookies.Add(new HttpCookie("AuthToken", token["access_token"].Value<string>()) { Expires = DateTime.Now.AddSeconds(590) });
-            Response.Cookies.Add(new HttpCookie("RefreshToken", token["refresh_token"].Value<string>()) { Expires = DateTime.Now.AddDays(30) } );
+            Cookies.SetCookie(Response, new HttpCookie("AuthToken", token["access_token"].Value<string>()) { Expires = DateTime.Now.AddSeconds(590) });
+            Cookies.SetCookie(Response, new HttpCookie("RefreshToken", token["refresh_token"].Value<string>()) { Expires = DateTime.Now.AddDays(30) });
 
             return RedirectToAction("Index");
 
@@ -100,9 +101,9 @@ namespace TicketView.Controllers
             if (cookie != null)
                 return cookie.Value;
 
-            if (Request.Cookies["RefreshToken"] != null)
+            if (Cookies.GetCookie(Request, "RefreshToken") != null)
             {
-                string tokenUrl = String.Format(Secrets.RefreshTokenUrl, Request.Cookies["RefreshToken"].Value);
+                string tokenUrl = String.Format(Secrets.RefreshTokenUrl, Cookies.GetCookie(Request, "RefreshToken").Value);
 
                 HttpWebRequest request = (HttpWebRequest)WebRequest.Create(tokenUrl);
                 request.Headers.Add(SharedMethods.GetBasicAuthorizationHeader());
@@ -119,7 +120,7 @@ namespace TicketView.Controllers
 
                 JObject token = JObject.Parse(result);
                 string newToken = token["access_token"].Value<string>();
-                Response.Cookies.Add(new HttpCookie("AuthToken", newToken) { Expires = DateTime.Now.AddSeconds(590) });
+                Cookies.SetCookie(Response, new HttpCookie("AuthToken", newToken) { Expires = DateTime.Now.AddSeconds(590) });
 
                 return newToken;
             }
@@ -131,7 +132,7 @@ namespace TicketView.Controllers
         {
             string url = String.Format("https://api.assembla.com/v1/spaces/{0}/milestones.json", Secrets.SpaceId);
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
-            request.Headers.Add(SharedMethods.GetBearerAuthorizationHeader(ReauthorizeToken(Request.Cookies["AuthToken"])));
+            request.Headers.Add(SharedMethods.GetBearerAuthorizationHeader(ReauthorizeToken(Cookies.GetCookie(Request, "AuthToken"))));
             request.Method = "GET";
 
             HttpWebResponse response = (HttpWebResponse)request.GetResponse();
@@ -157,7 +158,7 @@ namespace TicketView.Controllers
             {
                 string url = String.Format("https://api.assembla.com/v1/spaces/{0}/tickets/milestone/{1}.json?per_page=25&page={2}&ticket_status=all", Secrets.SpaceId, milestoneId, page++);
                 HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
-                request.Headers.Add(SharedMethods.GetBearerAuthorizationHeader(ReauthorizeToken(Request.Cookies["AuthToken"])));
+                request.Headers.Add(SharedMethods.GetBearerAuthorizationHeader(ReauthorizeToken(Cookies.GetCookie(Request, "AuthToken"))));
                 request.Method = "GET";
 
                 HttpWebResponse response = (HttpWebResponse)request.GetResponse();

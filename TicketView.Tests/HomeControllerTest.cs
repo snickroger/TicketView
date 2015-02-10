@@ -78,6 +78,7 @@ namespace TicketView.Tests
         public void LoginTestNoCode()
         {
             HomeController target = new HomeController();
+            target.Cookies = new CookieHelperTest();
             ActionResult result = target.Login();
 
             Assert.IsInstanceOfType(result, typeof(RedirectResult));
@@ -97,6 +98,25 @@ namespace TicketView.Tests
             actual = target.ReauthorizeToken(cookie);
 
             Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod()]
+        [HostType("ASP.NET")]
+        [UrlToTest("http://tickets.nick/")]
+        [DeploymentItem("TicketView.dll")]
+        public void ReauthorizeTokenTestWithoutAuthToken()
+        {
+            HomeController_Accessor target = new HomeController_Accessor();
+            target.Cookies = new CookieHelperTest();
+            try
+            {
+                target.ReauthorizeToken(null);
+                Assert.Fail();
+            }
+            catch (UnauthorizedAccessException)
+            {
+                Assert.IsTrue(true);
+            }
         }
 
         [TestMethod()]
