@@ -21,3 +21,11 @@
 #hide-completed {
     cursor: pointer;
 }
+
+.high-priority {
+    background-color: #64383E;
+}
+
+.low-priority {
+    background-color: #32387C;
+}

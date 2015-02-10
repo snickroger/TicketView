@@ -44,8 +44,10 @@
 @foreach (Ticket ticket in Model.Tickets)
 {
     var faded = @ticket.PanelFaded ? "faded" : null;
+    var priorityHigh = @ticket.Priority == "High" || @ticket.Priority == "Highest" ? "high-priority" : null;
+    var priorityLow = @ticket.Priority == "Low" || @ticket.Priority == "Lowest" ? "low-priority" : null;
     <div class="col-md-4">
-        <div class="ticket panel @ticket.PanelStyle @faded">
+        <div class="ticket panel @ticket.PanelStyle @faded @priorityHigh @priorityLow">
             <div class="panel-heading">
                 <h3 class="panel-title">
                     <span class="label label-default handle">#@ticket.Number</span> 
