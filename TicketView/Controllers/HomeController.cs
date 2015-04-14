@@ -154,9 +154,9 @@ namespace TicketView.Controllers
         {
             int page = 1;
             JArray tickets = new JArray();
-            while (page <= 6)
+            while (page <= 10)
             {
-                string url = String.Format("https://api.assembla.com/v1/spaces/{0}/tickets/milestone/{1}.json?per_page=25&page={2}&ticket_status=all", Secrets.SpaceId, milestoneId, page++);
+                string url = String.Format("https://api.assembla.com/v1/spaces/{0}/tickets/milestone/{1}.json?per_page=50&page={2}&ticket_status=all", Secrets.SpaceId, milestoneId, page++);
                 HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
                 request.Headers.Add(SharedMethods.GetBearerAuthorizationHeader(ReauthorizeToken(Cookies.GetCookie(Request, "AuthToken"))));
                 request.Method = "GET";
