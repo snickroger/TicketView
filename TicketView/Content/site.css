@@ -1,4 +1,8 @@
-﻿.faded {
+﻿@import url("//fonts.googleapis.com/css?family=Lato:400,900");
+body, h1, h2, h3 {
+    font-family: "Lato", Verdana, Helvetica, Sans-Serif !important;
+}
+.faded {
     opacity: 0.4;
 }
 
